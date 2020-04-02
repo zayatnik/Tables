@@ -3,46 +3,14 @@
 #pragma once
 
 class UnSortTable : public Table {
-	int size;
-	elem* mas;
-	elem* end;
-	int maxkey;
-	int power;
 public:
 	UnSortTable() {
-		mas = new elem[1];
-		size = 1;
-		power = 0;
-		maxkey = 0;
-		end = mas;
-		mas[0].key = -1;
 	}
 
-	UnSortTable(int size1) {
-		mas = new elem[size1];
-		size = size1;
-		power = 0;
-		maxkey = 0;
-		end = mas;
-		for (int i = 0; i < size1; i++)
-			mas[i].key = -1;
+	UnSortTable(int size1) :Table(size1) {
 	}
 
-	UnSortTable(Polynom mas1[], int size1) {
-		mas = new elem[size1];
-		for (int i = 0; i < size1; i++) {
-			mas[i].val = mas1[i];
-			mas[i].key = i + 1;
-		}
-		size = size1;
-		power = size1;
-		maxkey = size1;
-		*end = mas[size - 1];
-		end = &mas[size-1];
-	}
-
-	~UnSortTable(){
-			delete[] mas;
+	UnSortTable(Polynom mas1[], int size1) :Table(mas1, size1) {
 	}
 
 	bool isempty() {
@@ -53,79 +21,64 @@ public:
 	}
 
 	bool isfull() {
-		if (power == size)
+		if (power == csize)
 			return 1;
 		else
 			return 0;
 	}
 
 	int size() {
-		return size;
+		return csize;
 	}
 
-	void insert(Polynom x) {
-		if (power == size) {
-			elem* tmp = new elem[size];
-			for (int i = 0; i < size; i++) {
-				tmp[i].val = mas[i].val;
-				tmp[i].key = mas[i].key;
-			}
-			delete[] mas;
-			elem* mas = new elem[size + 1];
-			for (int i = 0; i < size; i++) {
-				mas[i].val = tmp[i].val;
-				mas[i].key = tmp[i].key;
-			}
-			delete[] tmp;
-			mas[size].val = x;
-			mas[size].key = maxkey + 1;
-			size++;
-			*end = mas[size - 1];
-			end = &mas[size - 1];
+	void insert(elem x) {
+		elem ind = search(x.key);
+		if (ind.key = -1) {
+			this->repack;
+			mas[csize / 2] = x;
+			this->newend;
+			power++;
 		}
-		else {
-			int i = 0;
-			while (mas[i].key > -1)
-				i++;
-			mas[i].val = x;
-			mas[i].key = maxkey + 1;
-		}
-		maxkey++;
-		power++;
+		else
+			cout << "error" << endl;
 	}
 
 	void remove(int key1) {
-		int i = 0;
-		while (mas[i].key != key1)
-			i++;
-		elem* tmp = new elem[size];
-		for (int j = 0; j < i; j++) {
-			tmp[j].val = mas[j].val;
-			tmp[j].key = mas[j].key;
+		elem ind = search(key1);
+		if (ind.key > -1) {
+			int i = 0;
+			while (mas[i].key != key1)
+				i++;
+			elem* tmp = new elem[csize];
+			for (int j = 0; j < i; j++) {
+				tmp[j] = mas[j];
+			}
+			for (int j = i + 1; j < csize; j++) {
+				tmp[j] = mas[j];
+			}
+			delete[] mas;
+			elem* mas = new elem[csize - 1];
+			for (int i = 0; i < csize - 2; i++) {
+				mas[i] = tmp[i];
+			}
+			delete[] tmp;
+			if (i == csize - 1) {
+				csize--;
+				this->newend;
+			}
+			power--;
 		}
-		for (int j = i+1; j < size; j++) {
-			tmp[j].val = mas[j].val;
-			tmp[j].key = mas[j].key;
-		}
-		delete[] mas;
-		elem* mas = new elem[size - 1];
-		for (int i = 0; i < size - 2; i++) {
-			mas[i].val = tmp[i].val;
-			mas[i].key = tmp[i].key;
-		}
-		delete[] tmp;
-		if (i == size - 1) {
-			size--;
-			*end = mas[size - 1];
-			end = &mas[size - 1];
-		}
-		power--;
 	}
 
 	elem search(int key1) {
 		int i = 0;
+		elem err;
+		err.key = -1;
 		while (mas[i].key != key1)
 			i++;
-		return mas[i];
+		if (i < csize)
+			return mas[i];
+		else
+			return err;
 	}
 };
