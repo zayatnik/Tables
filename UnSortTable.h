@@ -32,11 +32,12 @@ public:
 	}
 
 	void insert(elem x) {
-		elem ind = search(x.key);
-		if (ind.key = -1) {
-			this->repack;
-			mas[csize / 2] = x;
-			this->newend;
+		elem ind = mas[search(x.key)];
+		if (ind.key == -1) {
+			if (isfull)
+				this->repack;
+			mas[csize] = x;
+			this->newendisthelast;
 			power++;
 		}
 		else
@@ -44,41 +45,26 @@ public:
 	}
 
 	void remove(int key1) {
-		elem ind = search(key1);
+		int i = search(key1);
+		elem ind = mas[i];
 		if (ind.key > -1) {
-			int i = 0;
-			while (mas[i].key != key1)
-				i++;
-			elem* tmp = new elem[csize];
-			for (int j = 0; j < i; j++) {
-				tmp[j] = mas[j];
-			}
-			for (int j = i + 1; j < csize; j++) {
-				tmp[j] = mas[j];
-			}
-			delete[] mas;
-			elem* mas = new elem[csize - 1];
-			for (int i = 0; i < csize - 2; i++) {
-				mas[i] = tmp[i];
-			}
-			delete[] tmp;
-			if (i == csize - 1) {
-				csize--;
-				this->newend;
-			}
+			elem tmp = mas[i];
+			mas[i] = *end;
+			*end = tmp;
+			end = &tmp;
 			power--;
 		}
 	}
 
-	elem search(int key1) {
+	int search(int key1) {
 		int i = 0;
 		elem err;
 		err.key = -1;
 		while (mas[i].key != key1)
 			i++;
 		if (i < csize)
-			return mas[i];
+			return i;
 		else
-			return err;
+			return i;
 	}
 };
