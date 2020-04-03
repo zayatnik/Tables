@@ -39,29 +39,25 @@ public:
 		}
 		csize = size1;
 		power = size1;
-		this->newend;
+		this->newendisthelast;
 	}
 
 	virtual ~Table() {
 		delete[] mas;
 	}
 
-	void newend() {
-		*end = mas[csize/2];
-		end = &mas[csize/2];
+	void newendisthelast() {
+		*end = mas[csize];
+		end = &mas[csize];
 	}
 
 	void repack() {
-		elem* tmp = new elem[csize];
+		elem* tmp = new elem[2 * csize];
 		for (int i = 0; i < csize; i++) {
 			tmp[i] = mas[i];
 		}
 		delete[] mas;
-		elem* mas = new elem[csize*2];
-		for (int i = 0; i < csize; i++) {
-			mas[i] = tmp[i];
-		}
-		delete[] tmp;
+		mas = tmp;
 		csize = csize * 2;
 	}
 
@@ -75,6 +71,6 @@ public:
 	}
 	virtual void remove(int key1) {
 	}
-	virtual elem search(int key1) {
+	virtual int search(int key1) {
 	}
 };
