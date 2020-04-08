@@ -34,10 +34,12 @@ public:
 	void insert(elem x) {
 		elem ind = mas[search(x.key)];
 		if (ind.key == -1) {
-			if (isfull)
+			if (isfull){
 				this->repack;
-			mas[csize] = x;
-			this->newendisthelast;
+				mas[csize / 2] = x;
+			}
+			else
+				mas[power] = x;
 			power++;
 		}
 		else
@@ -49,9 +51,8 @@ public:
 		elem ind = mas[i];
 		if (ind.key > -1) {
 			elem tmp = mas[i];
-			mas[i] = *end;
-			*end = tmp;
-			end = &tmp;
+			mas[i] = mas[power-1];
+			mas[power - 1] = tmp;
 			power--;
 		}
 	}
