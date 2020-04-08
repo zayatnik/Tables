@@ -11,14 +11,12 @@ class Table{
 protected:
 	int csize;
 	elem* mas;
-	elem* end;
 	int power;
 public:
 	Table() {
 		mas = new elem[1];
 		csize = 1;
 		power = 0;
-		end = mas;
 		mas[0].key = -1;
 	}
 
@@ -26,7 +24,6 @@ public:
 		mas = new elem[size1];
 		csize = size1;
 		power = 0;
-		end = mas;
 		for (int i = 0; i < size1; i++)
 			mas[i].key = -1;
 	}
@@ -39,16 +36,10 @@ public:
 		}
 		csize = size1;
 		power = size1;
-		this->newendisthelast;
 	}
 
 	virtual ~Table() {
 		delete[] mas;
-	}
-
-	void newendisthelast() {
-		*end = mas[csize];
-		end = &mas[csize];
 	}
 
 	void repack() {
