@@ -2,29 +2,46 @@
 
 #pragma once
 
+#define N 100
+
+struct elem {
+	Polynom val;
+	int key;
+};
+
+struct el {
+	elem val;
+	bool stat;
+};
+
 class HashTable : public Table {
+protected:
+	int csize;
+	el* mas;
+	int power;
 public:
 	HashTable() {
-		mas = new elem[100];
-		csize = 100;
+		mas = new el[N];
+		csize = N;
 		power = 0;
-		for (int i = 0; i < csize; i++)
-			mas[i].key = -1;
+		for (int i = 0; i < csize; i++) {
+			mas[i].val.key = -1;
+			mas[i].stat = false;
+		}
 	}
 
 	HashTable(int size1) {
-		mas = new elem[size1-(size1%100)+100];
-		csize = size1 - (size1 % 100) + 100;
+		mas = new el[size1-(size1%N)+N];
+		csize = size1 - (size1 % N) + N;
 		power = 0;
-		for (int i = 0; i < csize; i++)
-			mas[i].key = -1;
+		for (int i = 0; i < csize; i++) {
+			mas[i].val.key = -1;
+			mas[i].stat = false;
+		}
 	}
 
 	bool isempty() {
-		if (power == 0)
-			return 1;
-		else
-			return 0;
+		return power == 0;
 	}
 
 	bool isfull() {
@@ -35,55 +52,50 @@ public:
 	}
 
 	int size() {
-		return csize;
+		return power;
 	}
 
 	int hash(int key1) {
-		return key1%100;
+		return key1%csize;
 	}
 
 	int search(int key1) {
 		int i = hash(key1);
-		while ((mas[i].key != key1)&&(i < csize))
-			i = i + 100;
+		while (!((mas[i].val.key = key1) && (mas[i].stat = false)) && (i < csize)) {
+			if ((mas[i].val.key = -1) && (mas[i].stat = false))
+				i = csize;
+			else
+				i = i++;
+		}
 		return i;
 	}
 
 	void insert(elem x) {
 		int i = hash(x.key);
-		bool flag = 0;
-		while (i < csize) {
-			if (mas[i].key != (-1)) {
-				mas[i] = x;
-				flag = 1;
-				if (i > power)
-					power = i;
-			}
-			i = i + 100;
+		while ((mas[i].val.key != -1) && (mas[i].stat != true) && (i < csize - 1))
+			i++;
+		if (i < csize) {
+			mas[i].val = x;
+			mas[i].stat = false;
+			power = i;
 		}
-		if (flag == 0) {
-			this->repack;
-			mas[csize - 100 + hash(x.key)] = x;
-			power = csize - 100 + hash(x.key);
+		else {
+			el* tmp = new el[2 * csize];
+			for (int i = 0; i < csize; i++) {
+				tmp[i] = mas[i];
+			}
+			delete[] mas;
+			mas = tmp;
+			csize = csize * 2;
+			mas[csize / 2].val = x;
+			power = csize / 2;
 		}
 	}
 
 	void remove(int key1) {
 		if (search(key1) < csize) {
-			mas[search(key1)].key = -1;
-			if (search(key1) == power) {
-				bool flag = 0;
-				int i = power - 1;
-				while (flag == 0) {
-					if (mas[i].key > -1) {
-						power = i;
-						flag = 1;
-					}
-					i--;
-				}
-			}
+			mas[search(key1)].val.key = -1;
+			mas[search(key1)].stat = true;
 		}
-		else
-			cout << "error";
 	}
 };
