@@ -63,7 +63,7 @@ public:
 		int i = hash(key1);
 		bool flag = false;
 		while ((flag == false) && (i < csize)) {
-			if ((mas[i].val.key == key1) && (mas[i].stat = false))
+			if ((mas[i].val.key == key1) && (mas[i].stat == false))
 				flag = true;
 			else
 				i++;
@@ -71,7 +71,7 @@ public:
 		if (flag == false) {
 			int j = 0;
 			while ((flag == false) && (i < hash(key1)))
-				if ((mas[j].val.key == key1) && (mas[j].stat = false)) {
+				if ((mas[j].val.key == key1) && (mas[j].stat == false)) {
 					flag = true;
 					i = j;
 				}
