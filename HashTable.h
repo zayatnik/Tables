@@ -4,13 +4,11 @@
 
 #define N 100
 
-struct elem {
-	Polynom val;
-	int key;
-};
-
 struct el {
-	elem val;
+	struct elem {
+		int val;
+		int key;
+	} val;
 	bool stat;
 };
 
@@ -85,12 +83,14 @@ public:
 		while ((mas[i].val.key != -1) && (mas[i].stat == false) && (i != hash(x.key) - 1))
 			i = (i + 1) % csize;
 		if ((i < hash(x.key) - 1) || (i >= hash(x.key))) {
-			mas[i].val = x;
+			mas[i].val.val = x.val;
+			mas[i].val.key = x.key;
 			mas[i].stat = false;
 		}
 		if (i == hash(x.key) - 1) {
 			if ((mas[i].val.key == -1) || (mas[i].stat == true)) {
-				mas[i].val = x;
+				mas[i].val.val = x.val;
+				mas[i].val.key = x.key;
 				mas[i].stat = false;
 			}
 			else {
@@ -101,7 +101,8 @@ public:
 				delete[] mas;
 				mas = tmp;
 				csize = csize * 2;
-				mas[csize / 2].val = x;
+				mas[csize / 2].val.val = x.val;
+				mas[csize / 2].val.key = x.key;
 				power = csize / 2;
 			}
 		}
