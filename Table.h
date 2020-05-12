@@ -3,7 +3,7 @@
 #pragma once
 
 struct elem {
-	Polynom val;
+	int val;
 	int key;
 };
 
@@ -28,7 +28,7 @@ public:
 			mas[i].key = -1;
 	}
 
-	Table(Polynom mas1[], int size1) {
+	Table(int mas1[], int size1) {
 		mas = new elem[size1];
 		for (int i = 0; i < size1; i++) {
 			mas[i].val = mas1[i];
