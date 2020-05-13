@@ -68,7 +68,7 @@ public:
 		}
 		if (flag == false) {
 			int j = 0;
-			while ((flag == false) && (i < hash(key1)))
+			while ((flag == false) && (j < hash(key1)))
 				if ((mas[j].val.key == key1) && (mas[j].stat == false)) {
 					flag = true;
 					i = j;
@@ -85,12 +85,14 @@ public:
 		if ((i < hash(x.key) - 1) || (i >= hash(x.key))) {
 			mas[i].val.val = x.val;
 			mas[i].val.key = x.key;
+			power++;
 			mas[i].stat = false;
 		}
 		if (i == hash(x.key) - 1) {
 			if ((mas[i].val.key == -1) || (mas[i].stat == true)) {
 				mas[i].val.val = x.val;
 				mas[i].val.key = x.key;
+				power++;
 				mas[i].stat = false;
 			}
 			else {
@@ -110,8 +112,13 @@ public:
 
 	void remove(int key1) {
 		if (search(key1) < csize) {
-			mas[search(key1)].val.key = -1;
-			mas[search(key1)].stat = true;
+			int i = search(key1);
+			mas[i].val.key = -1;
+			mas[i].stat = true;
 		}
+	}
+
+	el ielem(int i) {
+		return mas[i];
 	}
 };
